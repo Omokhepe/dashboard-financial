@@ -7,10 +7,7 @@ import OverviewBudget from '@/app/overview/OverviewBudget';
 import { Progress } from '@components/ui/progress';
 import Image from 'next/image';
 import { formatDate } from '@/utils/formatData';
-import AddModal from '@components/Modal';
 import DialogForm from '@components/Modal';
-import { Input } from '@components/ui/input';
-import { Label } from '@components/ui/label';
 import { PopoverMenu } from '@components/PopoverMenu';
 import { EditModal } from '@components/EditModal';
 
@@ -18,13 +15,14 @@ const Budget = () => {
   const { loading, error, data } = useFetchData('/data.json');
   const budgetData = data?.budgets || [];
   const transactions = data?.transactions || [];
+  const color = data?.color || [];
   const [isOpen, setIsOpen] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', amount: '' });
   const categories = [...new Set(transactions.map((t) => t.category))];
   const [openDialog, setOpenDialog] = useState();
-  const [selectedBudget, setSelectedBudget] = useState('');
+  const [selectedBudget, setSelectedBudget] = useState(null);
 
   const handleSubmit = () => {
     console.log('Submitted:', formData);
@@ -81,7 +79,6 @@ const Budget = () => {
   //   );
   // }, [transactions, budgetData]);
   //
-  // console.log(budgetCat, 'here');
   return (
     <div className="w-full bg-beige100 px-12 py-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -117,7 +114,7 @@ const Budget = () => {
             amtText="Maximum Spend"
             budgets={categories}
             spanText="Choose a category to set a spendig budget"
-            // colors={budgetData}
+            colors={color}
           />
         </div>
       </div>
@@ -175,25 +172,33 @@ const Budget = () => {
 
                     {/*<Ellipsis className="hover:scale-105 cursor-pointer hover:shadow-lg duration-200" />*/}
                     <PopoverMenu
-                      onEdit={() => setOpenDialog(true)}
+                      onEdit={() => {
+                        setSelectedBudget(b);
+                        setOpenDialog(true);
+                      }}
                       onDelete={() => alert('Delete clicked')}
-                      // setSelected={() => setSelectedBudget(b.category)}
-                      // selected={selectedBudget}
                     />
                     <EditModal
                       open={openDialog}
                       onClose={() => setOpenDialog(false)}
-                      initialValues={{
-                        name: b.name,
-                        category: b.category,
-                        amount: b.amount,
-                      }}
+                      initialValues={
+                        selectedBudget
+                          ? {
+                              color: selectedBudget.theme,
+                              category: selectedBudget.category,
+                              amount: selectedBudget.maximum.toFixed(2),
+                            }
+                          : { color: '', category: '', amount: '' }
+                      }
                       onSave={(values) => {
                         console.log('Updated values:', values);
                         setOpenDialog(false);
                       }}
                       categories={budgetData}
                       title="Budget"
+                      color={color}
+                      subTitle="Budget Category"
+                      amtText="Maximum Spend"
                     />
                   </div>
                   <h5 className="text-sm text-gray-600">

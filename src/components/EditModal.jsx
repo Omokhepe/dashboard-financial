@@ -26,7 +26,10 @@ export function EditModal({
   onSave,
   title,
   subTitle,
-  categories,
+  categories = [],
+  color,
+  inputText,
+  amtText,
 }) {
   const [formValues, setFormValues] = useState(initialValues);
 
@@ -42,48 +45,91 @@ export function EditModal({
           <DialogTitle>Edit {title}</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <Select
-            value={formValues.category}
-            onValueChange={(value) =>
-              setFormValues({ ...formValues, category: value })
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((cat, index) => (
-                <SelectItem key={index} value={cat.category}>
-                  {cat.category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Input
-            placeholder="Category"
-            value={formValues.category}
-            onChange={(e) =>
-              setFormValues({ ...formValues, category: e.target.value })
-            }
-          />
+        <div className="space-y-4 mt-5">
+          {categories.length > 0 && (
+            <div>
+              {' '}
+              <Label htmlFor="category">{subTitle}</Label>
+              <Select
+                value={formValues.category}
+                onValueChange={(value) =>
+                  setFormValues({ ...formValues, category: value })
+                }
+              >
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat, index) => (
+                    <SelectItem key={index} value={cat.category}>
+                      {cat.category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          <Label htmlFor="amount-input">{subTitle}</Label>
           <Input
             placeholder="Amount"
-            type="number"
-            value={formValues.amount}
+            type="text"
+            value={formValues.category}
             onChange={(e) =>
               setFormValues({
                 ...formValues,
                 amount: parseFloat(e.target.value),
               })
             }
+            id="amount-input"
           />
+          {inputText && (
+            <div>
+              <Label htmlFor="amount-input">{amtText}</Label>
+              <Input
+                placeholder="Amount"
+                type="number"
+                value={formValues.amount}
+                onChange={(e) =>
+                  setFormValues({
+                    ...formValues,
+                    amount: e.target.value,
+                  })
+                }
+                id="amount-input"
+              />
+            </div>
+          )}
+          <div className="grid gap-2 mt-4">
+            <Label htmlFor="color">Theme</Label>
+            <Select
+              value={formValues.color.toLowerCase()}
+              onValueChange={(value) =>
+                setFormValues({ ...formValues, color: value })
+              }
+            >
+              <SelectTrigger id="color" className="w-full">
+                <SelectValue placeholder="Choose category" />
+              </SelectTrigger>
+              <SelectContent>
+                {color.map((c, index) => (
+                  <SelectItem key={index} value={c.value}>
+                    <div className="flex items-center gap-2 h-10 ">
+                      <span
+                        className="h-4 w-4 rounded-full"
+                        style={{ backgroundColor: c.value }}
+                      />
+                      {c.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={onClose}>
-              Cancel
+          <div className="flex justify-end space-x-2 w-full">
+            <Button className="w-full" onClick={() => onSave(formValues)}>
+              Save Changes
             </Button>
-            <Button onClick={() => onSave(formValues)}>Save</Button>
           </div>
         </div>
       </DialogContent>

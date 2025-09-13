@@ -171,14 +171,14 @@ export default function DialogForm({
                 <SelectValue placeholder="Choose color" />
               </SelectTrigger>
               <SelectContent>
-                {colors.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>
+                {colors.map((c, index) => (
+                  <SelectItem key={index} value={c.value}>
                     <div className="flex items-center gap-2">
                       <span
                         className="h-4 w-4 rounded-full"
                         style={{ backgroundColor: c.value }}
                       />
-                      {c.label}
+                      {c.name}
                     </div>
                   </SelectItem>
                 ))}

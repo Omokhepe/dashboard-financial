@@ -6,8 +6,10 @@ import TransactionTable from '@/app/overview/TransactionTable';
 import OverviewBudget from '@/app/overview/OverviewBudget';
 import { formatFigures } from '@/utils/formatData';
 import OverviewBill from '@/app/overview/OverviewBill';
+import { useRouter } from 'next/navigation';
 
 const Overview = () => {
+  const router = useRouter();
   const { loading, error, data } = useFetchData('/data.json');
 
   const [isActive, setIsActive] = useState('current');
@@ -57,7 +59,10 @@ const Overview = () => {
           <div className="flex flex-col card_wrap">
             <div className="flex justify-between px-4">
               <h4 className="font-bold">Pots</h4>
-              <h6 className="hover:scale-105 cursor-pointer font-light text-sm">
+              <h6
+                className="hover:scale-105 cursor-pointer font-light text-sm"
+                onClick={() => router.push('/pots')}
+              >
                 See Details
               </h6>
             </div>
@@ -96,7 +101,10 @@ const Overview = () => {
           <div className="flex flex-col card_wrap">
             <div className="flex justify-between px-4">
               <h4 className="font-bold">Budget</h4>
-              <h6 className="hover:scale-105 cursor-pointer font-light text-sm">
+              <h6
+                className="hover:scale-105 cursor-pointer font-light text-sm"
+                onClick={() => router.push('/budget')}
+              >
                 See Details
               </h6>
             </div>
@@ -123,7 +131,10 @@ const Overview = () => {
           <div className="flex flex-col card_wrap">
             <div className="flex justify-between px-4">
               <h4 className="font-bold">Recurring Bills</h4>
-              <h6 className="hover:scale-105 cursor-pointer font-light text-sm">
+              <h6
+                className="hover:scale-105 cursor-pointer font-light text-sm"
+                onClick={() => router.push('/bills')}
+              >
                 See Details
               </h6>
             </div>

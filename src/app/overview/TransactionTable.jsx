@@ -1,15 +1,20 @@
 import React from 'react';
 import Image from 'next/image';
 import { formatAmount, formatDate } from '@/utils/formatData';
+import { useRouter } from 'next/navigation';
 
 const TransactionTable = ({ transactions }) => {
+  const router = useRouter();
   console.log(transactions);
 
   return (
     <div className="p-6">
       <div className="flex justify-between pb-2">
         <h4 className="font-bold">Transaction</h4>
-        <h6 className="hover:scale-105 font-light text-sm cursor-pointer">
+        <h6
+          className="hover:scale-105 font-light text-sm cursor-pointer"
+          onClick={() => router.push('/transaction')}
+        >
           See Details
         </h6>
       </div>

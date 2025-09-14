@@ -1,9 +1,9 @@
 'use client';
 import React, { useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Ellipsis, Plus } from 'lucide-react';
+import { Button } from '@components/ui/button';
+import { Plus } from 'lucide-react';
 import { useFetchData } from '@hooks/useFetchData';
-import OverviewBudget from '@/app/overview/OverviewBudget';
+import OverviewBudget from '@/app/(main)/overview/OverviewBudget';
 import { Progress } from '@components/ui/progress';
 import Image from 'next/image';
 import { formatDate } from '@/utils/formatData';
@@ -64,37 +64,12 @@ const Budget = () => {
     );
   }, [transactions, budgetData]);
 
-  // const budgetCat = useMemo(() => {
-  //   if (!transactions || !budgetData) return [];
-  //
-  //   // return budgetData.map((budget) => ({
-  //   //   // ...budget,
-  //   //   transactions: transactions.filter(
-  //   //     (tx) => tx.category === budget.category
-  //   //   ),
-  //   // }));
-  //
-  //   return transactions.filter((tx) =>
-  //     budgetData.some((budget) => budget.category === tx.category)
-  //   );
-  // }, [transactions, budgetData]);
-  //
   return (
     <div className="w-full bg-beige100 px-12 py-8">
       <div className="flex flex-wrap items-center justify-between">
         <h2 className="text-grey900 text-3xl font-bold">Budget</h2>
-        {/*<AddModal isOpen={isOpen} setIsOpen={setIsOpen} />*/}
-        {/*<Button*/}
-        {/*  variant="secondary"*/}
-        {/*  className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 h-12"*/}
-        {/*  onClick={() => setIsOpen(true)}*/}
-        {/*>*/}
-        {/*  <Plus />*/}
-        {/*  Add New Budget*/}
-        {/*</Button>*/}
 
         <div>
-          {/* Your existing button */}
           <Button
             variant="secondary"
             className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 h-12"
@@ -118,7 +93,6 @@ const Budget = () => {
           />
         </div>
       </div>
-      {/*<OverviewBudget budgets={budgetData} />*/}
       <div className="flex">
         <div className="flex-1/3 bg-white m-5 rounded-lg card_wrap h-1/2">
           <div className="flex justify-center">
@@ -170,7 +144,6 @@ const Budget = () => {
                       </span>
                     </div>
 
-                    {/*<Ellipsis className="hover:scale-105 cursor-pointer hover:shadow-lg duration-200" />*/}
                     <PopoverMenu
                       onEdit={() => {
                         setSelectedBudget(b);
@@ -178,34 +151,10 @@ const Budget = () => {
                       }}
                       onDelete={() => alert('Delete clicked')}
                     />
-                    <EditModal
-                      open={openDialog}
-                      onClose={() => setOpenDialog(false)}
-                      initialValues={
-                        selectedBudget
-                          ? {
-                              color: selectedBudget.theme,
-                              category: selectedBudget.category,
-                              amount: selectedBudget.maximum.toFixed(2),
-                            }
-                          : { color: '', category: '', amount: '' }
-                      }
-                      onSave={(values) => {
-                        console.log('Updated values:', values);
-                        setOpenDialog(false);
-                      }}
-                      categories={budgetData}
-                      title="Budget"
-                      color={color}
-                      subTitle="Budget Category"
-                      amtText="Maximum Spend"
-                    />
                   </div>
                   <h5 className="text-sm text-gray-600">
-                    {/*${used.toFixed(2)} of ${b.maximum}*/}
                     Maximum of ${b.maximum}
                   </h5>
-                  {/*</div>*/}
                   <Progress
                     value={percent}
                     className="h-6 bg-beige500"
@@ -236,11 +185,7 @@ const Budget = () => {
                             {name}
                           </span>
                           <div className="justify-end">
-                            <h4
-                            // className={`${color} font-bold justify-self-end`}
-                            >
-                              ${amount}
-                            </h4>
+                            <h4>${amount}</h4>
                             <h6 className="text-sm">{formatDate(date)}</h6>
                           </div>
                         </div>
@@ -250,6 +195,28 @@ const Budget = () => {
                 </div>
               );
             })}
+            <EditModal
+              open={openDialog}
+              onClose={() => setOpenDialog(false)}
+              initialValues={
+                selectedBudget
+                  ? {
+                      color: selectedBudget.theme,
+                      category: selectedBudget.category,
+                      amount: selectedBudget.maximum.toFixed(2),
+                    }
+                  : { color: '', category: '', amount: '' }
+              }
+              onSave={(values) => {
+                console.log('Updated values:', values);
+                setOpenDialog(false);
+              }}
+              categories={budgetData}
+              title="Budget"
+              color={color}
+              subTitle="Budget Category"
+              amtText="Maximum Spend"
+            />
           </div>
         </div>
       </div>

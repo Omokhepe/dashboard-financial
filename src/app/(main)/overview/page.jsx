@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import PotIcon from '@assets/images/icon-nav-pots.svg';
-import { useFetchData } from '@/hooks/useFetchData';
-import TransactionTable from '@/app/overview/TransactionTable';
-import OverviewBudget from '@/app/overview/OverviewBudget';
+import { useFetchData } from '@hooks/useFetchData';
+import TransactionTable from '@/app/(main)/overview/TransactionTable';
+import OverviewBudget from '@/app/(main)/overview/OverviewBudget';
 import { formatFigures } from '@/utils/formatData';
-import OverviewBill from '@/app/overview/OverviewBill';
+import OverviewBill from '@/app/(main)/overview/OverviewBill';
 import { useRouter } from 'next/navigation';
 
 const Overview = () => {

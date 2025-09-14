@@ -14,16 +14,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@components/ui/table';
+import { Input } from '@components/ui/input';
+import { Button } from '@components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@components/ui/select';
 import { useFetchData } from '@hooks/useFetchData';
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react';
 

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Button } from '@components/ui/button';
-import { Ellipsis, Minus, Plus } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { useFetchData } from '@hooks/useFetchData';
 import { Progress } from '@components/ui/progress';
 import DialogForm from '@components/Modal';
@@ -45,7 +45,6 @@ const Pots = () => {
             inputText={true}
             subTitle="Pot Name"
             amtText="Maximum Spend"
-            // budgets={categories}
             spanText="Create a pot to set savings target."
             colors={colorData}
           />
@@ -70,36 +69,13 @@ const Pots = () => {
                   />
                   <span className="font-bold text-lg">{name}</span>
                 </div>
-                {/*<Ellipsis className="hover:scale-105 cursor-pointer hover:shadow-lg duration-200" />*/}
+
                 <PopoverMenu
                   onEdit={() => {
                     setSelectedBudget(item);
                     setOpenDialog(true);
                   }}
                   onDelete={() => alert('Delete clicked')}
-                />
-                <EditModal
-                  open={openDialog}
-                  onClose={() => setOpenDialog(false)}
-                  initialValues={
-                    selectedBudget
-                      ? {
-                          color: selectedBudget.theme,
-                          category: selectedBudget.name,
-                          amount: selectedBudget.target.toFixed(2),
-                        }
-                      : { color: '', category: '', amount: '' }
-                  }
-                  onSave={(values) => {
-                    console.log('Updated values:', values);
-                    setOpenDialog(false);
-                  }}
-                  title="Pot"
-                  color={colorData}
-                  subTitle="Pot Name"
-                  inputText={true}
-                  amtText="Target"
-                  subtitle="Pot Name"
                 />
               </div>
               <div className="flex justify-between py-8">
@@ -135,6 +111,29 @@ const Pots = () => {
             </div>
           );
         })}
+        <EditModal
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          initialValues={
+            selectedBudget
+              ? {
+                  color: selectedBudget.theme,
+                  category: selectedBudget.name,
+                  amount: selectedBudget.target.toFixed(2),
+                }
+              : { color: '', category: '', amount: '' }
+          }
+          onSave={(values) => {
+            console.log('Updated values:', values);
+            setOpenDialog(false);
+          }}
+          title="Pot"
+          color={colorData}
+          subTitle="Pot Name"
+          inputText={true}
+          amtText="Target"
+          subtitle="Pot Name"
+        />
       </div>
     </div>
   );

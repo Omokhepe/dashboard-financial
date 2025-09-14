@@ -1,15 +1,14 @@
 'use client';
-import React, { useState } from 'react';
-// import {Icon, Menu, X} from 'lucide-react'
-import * as Icons from 'lucide-react';
+import React from 'react';
 import { useFetchData } from '@/hooks/useFetchData';
 import { navLinks } from '@/constant/data';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import MinimizeIcon from '@assets/images/icon-minimize-menu.svg';
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+const Sidebar = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
+  const MinIcon = MinimizeIcon;
 
   return (
     <div
@@ -17,7 +16,14 @@ const Sidebar = () => {
         isOpen ? 'w-72' : 'w-20'
       } bg-grey900 text-white flex flex-col rounded-r-lg shadow-md transition-all fixed duration-300 h-full `}
     >
-      <h2 className="p-8">finance</h2>
+      <div
+        className="flex items-center my-6"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen && <h2 className="p-8 font-bold text-3xl">finance</h2>}
+        <MinIcon className={`${!isOpen && 'my-8 ml-6 justify-center'}`} />
+      </div>
+
       <aside>
         <nav>
           {navLinks.map((item, index) => {
@@ -33,7 +39,7 @@ const Sidebar = () => {
                   className={`w-5 h-5 fill-current ${isActive ? 'text-green' : 'fill-grey500'} transition [&>path]:fill-current`}
                 />
                 {/*<img src="" alt=""/>*/}
-                {item.label}
+                {isOpen && item.label}
               </Link>
             );
           })}

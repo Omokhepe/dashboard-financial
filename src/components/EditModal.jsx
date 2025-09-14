@@ -1,4 +1,3 @@
-// components/EditDialog.tsx
 'use client';
 
 import {
@@ -69,36 +68,38 @@ export function EditModal({
               </Select>
             </div>
           )}
-          <Label htmlFor="amount-input">{subTitle}</Label>
-          <Input
-            placeholder="Amount"
-            type="text"
-            value={formValues.category}
-            onChange={(e) =>
-              setFormValues({
-                ...formValues,
-                amount: parseFloat(e.target.value),
-              })
-            }
-            id="amount-input"
-          />
           {inputText && (
-            <div>
-              <Label htmlFor="amount-input">{amtText}</Label>
+            <>
+              <Label htmlFor="amount-input">{subTitle}</Label>
               <Input
                 placeholder="Amount"
-                type="number"
-                value={formValues.amount}
+                type="text"
+                value={formValues.category}
                 onChange={(e) =>
                   setFormValues({
                     ...formValues,
-                    amount: e.target.value,
+                    amount: parseFloat(e.target.value),
                   })
                 }
                 id="amount-input"
               />
-            </div>
+            </>
           )}
+
+          <Label htmlFor="amount-input">{amtText}</Label>
+          <Input
+            placeholder="Amount"
+            type="number"
+            value={formValues.amount}
+            onChange={(e) =>
+              setFormValues({
+                ...formValues,
+                amount: e.target.value,
+              })
+            }
+            id="amount-input"
+          />
+
           <div className="grid gap-2 mt-4">
             <Label htmlFor="color">Theme</Label>
             <Select

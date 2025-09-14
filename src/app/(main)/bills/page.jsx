@@ -14,16 +14,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@components/ui/table';
+import { Input } from '@components/ui/input';
+import { Button } from '@components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@components/ui/select';
 import { useFetchData } from '@hooks/useFetchData';
 import {
   ArrowBigLeft,
@@ -32,7 +32,6 @@ import {
   CircleCheck,
 } from 'lucide-react';
 import BillIcon from '@assets/images/icon-nav-recurring-bills.svg';
-import { log } from 'next/dist/server/typescript/utils';
 
 const columns = [
   {
@@ -97,6 +96,7 @@ const Bills = () => {
   // ✅ Filtering by sort logic
   // This filters the transaction array where recurring is true and date is most recent...
   // I also include a status key to help me with the color styling and some computations
+  //Also included logic for how the paid/ due/ upcoming computation happens
   const filteredData = React.useMemo(() => {
     let filtered = [...transactions];
 
@@ -116,6 +116,7 @@ const Bills = () => {
     }, {});
 
     // 3. Convert back to array
+    //This for the date formating Month-day
     const results = Object.values(grouped).map((tx) => {
       const txDate = new Date(tx.date);
       const day = txDate.getDate();
@@ -145,6 +146,7 @@ const Bills = () => {
       };
     });
 
+    //This gives the paid/ due/ upcoming summation
     const sums = results.reduce(
       (acc, tx) => {
         const amt = Math.abs(tx.amount);
@@ -156,6 +158,7 @@ const Bills = () => {
       { paidBill: 0, almostDue: 0, upcoming: 0 }
     );
 
+    //Kinda final output
     filtered = {
       results,
       totals: {
@@ -163,9 +166,9 @@ const Bills = () => {
         grandTotal: sums.paidBill + sums.upcoming,
       },
     };
-    console.log(filtered);
 
     // ✅ Sorting
+    // This for the sort by drop down
     if (sortBy === 'latest') {
       filtered.results.sort((a, b) => new Date(b.date) - new Date(a.date));
     } else if (sortBy === 'A-Z') {
@@ -257,7 +260,7 @@ const Bills = () => {
           <div className="flex flex-row justify-between pb-8 w-full">
             {/*search filter*/}
             <Input
-              placeholder="Search Transaction"
+              placeholder="Search Recurring Bills"
               value={globalFilter ?? ''}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="w-2/5"

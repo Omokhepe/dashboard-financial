@@ -1,60 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Cell,
-  Label,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import React, { useEffect, useState } from 'react';
+import { Cell, Label, Pie, PieChart } from 'recharts';
+import { Card, CardContent } from '@components/ui/card';
 import {
   // ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
+} from '@components/ui/chart';
 import { generateChartConfig } from '@/utils/formatData';
 
 const OverviewBudget = ({ budgets, transactions }) => {
   const total = budgets.reduce((sum, item) => sum + item.maximum, 0);
-
-  // const start = new Date('2024-08-01');
-  // const end = new Date('2024-08-31T23:59:59');
-  //
-  // const total1 = transactions
-  //   .filter((tx) => {
-  //     const txDate = new Date(tx.date);
-  //     return (
-  //       tx.category === budgets.category && txDate >= start && txDate <= end
-  //     );
-  //   })
-  //   .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-  //
-  // const sumTotal = useMemo(() => {
-  //   if (!transactions || !budgets) return 0;
-  //   console.log(transactions, budgets);
-  //   const start = new Date('2024-08-01');
-  //   const end = new Date('2024-08-31T23:59:59');
-  //
-  //   return transactions
-  //     .filter((tx) => {
-  //       const txDate = new Date(tx.date);
-  //       return (
-  //         tx.category === budgets.category && txDate >= start && txDate <= end
-  //       );
-  //     })
-  //     .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-  // }, [transactions]);
-  //
-  // console.log(total1, sumTotal);
 
   const [chartConfig, setChartConfig] = useState({});
 
@@ -64,8 +20,6 @@ const OverviewBudget = ({ budgets, transactions }) => {
       setChartConfig(config);
     }
   }, [budgets]);
-
-  // console.log({ chartConfig }, budgets);
 
   return (
     <Card className="flex w-2/3 flex-col shadow-none border-0">

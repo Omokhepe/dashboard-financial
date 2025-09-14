@@ -16,7 +16,6 @@ const OverviewBill = ({ transactions }) => {
         .slice(0, 3)
         // .filter(([_, total]) => total > 0)
         .map(([category, total], index) => {
-          console.log(total, category);
           return (
             <div
               key={index}

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 
 const TransactionTable = ({ transactions }) => {
   const router = useRouter();
-  console.log(transactions);
 
   return (
     <div className="p-6">

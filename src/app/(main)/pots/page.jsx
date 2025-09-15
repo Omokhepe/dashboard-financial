@@ -7,23 +7,46 @@ import { Progress } from '@components/ui/progress';
 import DialogForm from '@components/Modal';
 import { PopoverMenu } from '@components/PopoverMenu';
 import { EditModal } from '@components/EditModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPots, updatePots } from '@/store/action/potAction';
 
 const Pots = () => {
   const { loading, error, data } = useFetchData('/data.json');
-  const potData = data?.pots || [];
+  const pots = useSelector((state) => state.pots);
+  const dispatch = useDispatch();
+  const potData = pots.pots || [];
   const colorData = data?.color || [];
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', amount: '' });
+  const [formData, setFormData] = useState({ name: '', amount: '', theme: '' });
 
   const [openDialog, setOpenDialog] = useState();
   const [selectedBudget, setSelectedBudget] = useState(null);
 
   const handleSubmit = () => {
-    console.log('Submitted:', formData);
+    const nextId = potData.length > 0 ? potData[potData.length - 1].id + 1 : 1;
+
+    dispatch(
+      addPots({
+        id: nextId,
+        name: formData.name,
+        target: parseFloat(formData.amount),
+        total: 0,
+        theme: formData.theme,
+      })
+    );
     // API call or state update goes here
   };
+  const handleUpdate = (values) => {
+    dispatch(
+      updatePots({
+        name: values.name,
+        target: parseFloat(values.amount),
+        theme: values.color,
+        id: values.id,
+      })
+    );
+  };
 
-  console.log(potData);
   return (
     <div className="w-full bg-beige100 px-12 py-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -41,12 +64,14 @@ const Pots = () => {
             open={open}
             setOpen={setOpen}
             title="Add New Pot"
-            onSubmit={handleSubmit}
+            onSave={handleSubmit}
             inputText={true}
             subTitle="Pot Name"
             amtText="Maximum Spend"
             spanText="Create a pot to set savings target."
             colors={colorData}
+            formData={formData}
+            setFormData={setFormData}
           />
         </div>
       </div>
@@ -54,7 +79,6 @@ const Pots = () => {
         {potData.map((item, index) => {
           const { name, target, total, theme } = item;
           const percent = Math.min((total / target) * 100, 100);
-          console.log(percent);
           return (
             <div
               key={index}
@@ -118,13 +142,15 @@ const Pots = () => {
             selectedBudget
               ? {
                   color: selectedBudget.theme,
-                  category: selectedBudget.name,
+                  name: selectedBudget.name,
                   amount: selectedBudget.target.toFixed(2),
+                  id: selectedBudget.id,
                 }
-              : { color: '', category: '', amount: '' }
+              : { color: '', category: '', amount: '', id: '' }
           }
           onSave={(values) => {
             console.log('Updated values:', values);
+            handleUpdate(values);
             setOpenDialog(false);
           }}
           title="Pot"

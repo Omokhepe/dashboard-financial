@@ -59,9 +59,23 @@ export function EditModal({
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((cat, index) => (
-                    <SelectItem key={index} value={cat.category}>
-                      {cat.category}
+                  {categories.map((c, index) => (
+                    <SelectItem
+                      key={index}
+                      value={c.category}
+                      disabled={c.isExist}
+                      className="flex justify-between"
+                    >
+                      <div
+                        className={`flex items-center w-full gap-2 justify-between h-10 `}
+                      >
+                        {c.category}
+                        {c.isExist && (
+                          <span className="text-sm ml-42 flex justify-self-end">
+                            Already Used
+                          </span>
+                        )}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -74,11 +88,11 @@ export function EditModal({
               <Input
                 placeholder="Amount"
                 type="text"
-                value={formValues.category}
+                value={formValues.name}
                 onChange={(e) =>
                   setFormValues({
                     ...formValues,
-                    amount: parseFloat(e.target.value),
+                    name: parseFloat(e.target.value),
                   })
                 }
                 id="amount-input"
@@ -113,13 +127,18 @@ export function EditModal({
               </SelectTrigger>
               <SelectContent>
                 {color.map((c, index) => (
-                  <SelectItem key={index} value={c.value}>
-                    <div className="flex items-center gap-2 h-10 ">
+                  <SelectItem key={index} value={c.value} disabled={c.isExist}>
+                    <div className="flex items-center justify-evenly gap-2">
                       <span
                         className="h-4 w-4 rounded-full"
                         style={{ backgroundColor: c.value }}
                       />
                       {c.name}
+                      {c.isExist && (
+                        <span className="text-sm ml-42 flex justify-self-end">
+                          Already Used
+                        </span>
+                      )}
                     </div>
                   </SelectItem>
                 ))}

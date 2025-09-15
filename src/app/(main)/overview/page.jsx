@@ -7,10 +7,12 @@ import OverviewBudget from '@/app/(main)/overview/OverviewBudget';
 import { formatFigures } from '@/utils/formatData';
 import OverviewBill from '@/app/(main)/overview/OverviewBill';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 const Overview = () => {
   const router = useRouter();
   const { loading, error, data } = useFetchData('/data.json');
+  const budgets = useSelector((state) => state.budget.budgets);
 
   const [isActive, setIsActive] = useState('current');
 
@@ -18,7 +20,7 @@ const Overview = () => {
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data found</p>;
 
-  const { balance, transactions, budgets, pots } = data;
+  const { balance, transactions, pots } = data;
 
   const balanceCards = [
     { id: 'current', label: 'Current Balance', value: balance?.current },

@@ -25,20 +25,16 @@ export default function DialogForm({
   inputText,
   spanText,
   children,
-  onSubmit,
+  onSave,
   open,
   setOpen,
   colors = [],
   budgets = [],
+  formData,
+  setFormData,
 }) {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [formData, setFormData] = useState({ name: '', amount: '' });
-
-  const handleSubmit = () => {
-    console.log('Submitted:', formData);
-    // API call or state update goes here
-  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -51,7 +47,7 @@ export default function DialogForm({
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit?.();
+            onSave(formData);
             setOpen(false);
           }}
         >
@@ -61,20 +57,31 @@ export default function DialogForm({
               <Label htmlFor="color">{subTitle}</Label>
               <Select
                 value={selectedCategory}
-                onValueChange={setSelectedCategory}
+                onValueChange={(value) => {
+                  setSelectedCategory(value);
+                  setFormData({ ...formData, category: value });
+                }}
               >
                 <SelectTrigger id="color" className="w-full">
                   <SelectValue placeholder="Choose category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="w-full">
                   {budgets.map((c, index) => (
-                    <SelectItem key={index} value={c}>
-                      <div className="flex items-center gap-2 h-10 ">
-                        {/*<span*/}
-                        {/*  className="h-4 w-4 rounded-full"*/}
-                        {/*  style={{ backgroundColor: c.value }}*/}
-                        {/*/>*/}
-                        {c}
+                    <SelectItem
+                      key={index}
+                      value={c.category}
+                      disabled={c.isExist}
+                      className="flex justify-between"
+                    >
+                      <div
+                        className={`flex items-center w-full gap-2 justify-between h-10 `}
+                      >
+                        {c.category}
+                        {c.isExist && (
+                          <span className="text-sm ml-42 flex justify-self-end">
+                            Already Used
+                          </span>
+                        )}
                       </div>
                     </SelectItem>
                   ))}
@@ -101,6 +108,7 @@ export default function DialogForm({
             <Input
               id="amount"
               type="number"
+              required
               value={formData.amount}
               onChange={(e) =>
                 setFormData({ ...formData, amount: e.target.value })
@@ -113,19 +121,30 @@ export default function DialogForm({
           {/* Always show color dropdown */}
           <div className="grid gap-2">
             <Label htmlFor="color">Theme Color</Label>
-            <Select value={selectedColor} onValueChange={setSelectedColor}>
+            <Select
+              value={selectedColor}
+              onValueChange={(value) => {
+                setSelectedColor(value);
+                setFormData({ ...formData, theme: value });
+              }}
+            >
               <SelectTrigger id="color" className="w-full">
                 <SelectValue placeholder="Choose color" />
               </SelectTrigger>
               <SelectContent>
                 {colors.map((c, index) => (
-                  <SelectItem key={index} value={c.value}>
-                    <div className="flex items-center gap-2">
+                  <SelectItem key={index} value={c.value} disabled={c.isExist}>
+                    <div className="flex items-center justify-evenly gap-2">
                       <span
                         className="h-4 w-4 rounded-full"
                         style={{ backgroundColor: c.value }}
                       />
                       {c.name}
+                      {c.isExist && (
+                        <span className="text-sm ml-42 flex justify-self-end">
+                          Already Used
+                        </span>
+                      )}
                     </div>
                   </SelectItem>
                 ))}

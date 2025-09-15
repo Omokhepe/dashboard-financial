@@ -10,23 +10,66 @@ import { formatDate } from '@/utils/formatData';
 import DialogForm from '@components/Modal';
 import { PopoverMenu } from '@components/PopoverMenu';
 import { EditModal } from '@components/EditModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { addBudget, updateBudget } from '@/store/action/budgetAction';
 
 const Budget = () => {
   const { loading, error, data } = useFetchData('/data.json');
-  const budgetData = data?.budgets || [];
+  const budgetData = useSelector((state) => state.budget.budgets);
+  const dispatch = useDispatch();
   const transactions = data?.transactions || [];
   const color = data?.color || [];
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', amount: '' });
-  const categories = [...new Set(transactions.map((t) => t.category))];
-  const [openDialog, setOpenDialog] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
 
-  const handleSubmit = () => {
-    console.log('Submitted:', formData);
+  console.log(budgetData, editBudget, 'tryng again');
+  const [open, setOpen] = useState(false); //modal state
+  const [formData, setFormData] = useState({
+    amount: '',
+    category: '',
+    theme: '',
+  }); // form state
+
+  // This filters the transaction categories to get unique values, and then checks for also existing cat in budget array
+  const resultBudget = [...new Set(transactions.map((t) => t.category))].map(
+    (cat) => ({
+      category: cat,
+      isExist: budgetData.some((b) => b.category === cat),
+    })
+  );
+
+  const resultColor = color.map((color) => ({
+    ...color,
+    isExist: budgetData.some((b) => b.theme.toLowerCase() === color.value),
+  }));
+
+  const handleSave = (values) => {
+    const nextId =
+      budgetData.length > 0 ? budgetData[budgetData.length - 1].id + 1 : 1;
     // API call or state update goes here
+
+    dispatch(
+      addBudget({
+        id: nextId,
+        category: formData.category,
+        maximum: parseFloat(formData.amount),
+        theme: formData.theme,
+      })
+    );
+
+    setFormData({ amount: '', category: '', theme: '' });
+    setOpen(false);
+    setOpenDialog(false);
+  };
+  const handleUpdate = (values) => {
+    dispatch(
+      updateBudget({
+        category: values.category,
+        maximum: parseFloat(values.amount),
+        theme: values.color,
+        id: values.id,
+      })
+    );
   };
 
   const augustSums = useMemo(() => {
@@ -84,12 +127,14 @@ const Budget = () => {
             open={open}
             setOpen={setOpen}
             title="Add New Budget"
-            onSubmit={handleSubmit}
+            onSave={handleSave}
             subTitle="Budget Category"
             amtText="Maximum Spend"
-            budgets={categories}
+            budgets={resultBudget}
             spanText="Choose a category to set a spendig budget"
-            colors={color}
+            colors={resultColor}
+            formData={formData}
+            setFormData={setFormData}
           />
         </div>
       </div>
@@ -112,7 +157,7 @@ const Budget = () => {
                     <span className="font-bold">
                       ${augustSums.sums[budget.category]?.toFixed(2) || 0}{' '}
                     </span>
-                    of ${budget.maximum.toFixed(2)}
+                    of ${budget.maximum}
                   </h6>
                 </div>
               );
@@ -122,7 +167,7 @@ const Budget = () => {
 
         <div className="flex-3/5 my-5">
           <div className="grid gap-6 ">
-            {budgetData.slice(0, 3).map((b, index) => {
+            {budgetData.map((b, index) => {
               const used = augustSums.sums[b.category] || 0;
               const percent = Math.min((used / b.maximum) * 100, 100);
               const difference = Math.min(b.maximum - used);
@@ -204,16 +249,18 @@ const Budget = () => {
                       color: selectedBudget.theme,
                       category: selectedBudget.category,
                       amount: selectedBudget.maximum.toFixed(2),
+                      id: selectedBudget.id,
                     }
-                  : { color: '', category: '', amount: '' }
+                  : { color: '', category: '', amount: '', id: '' }
               }
               onSave={(values) => {
                 console.log('Updated values:', values);
+                handleUpdate(values);
                 setOpenDialog(false);
               }}
-              categories={budgetData}
+              categories={resultBudget}
               title="Budget"
-              color={color}
+              color={resultColor}
               subTitle="Budget Category"
               amtText="Maximum Spend"
             />

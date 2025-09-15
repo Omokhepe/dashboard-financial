@@ -151,8 +151,7 @@ const Bills = () => {
       (acc, tx) => {
         const amt = Math.abs(tx.amount);
         acc[tx.status] += amt;
-        // acc[tx.status].length;
-        console.log(acc, 'acc');
+
         return acc;
       },
       { paidBill: 0, almostDue: 0, upcoming: 0 }

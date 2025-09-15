@@ -400,21 +400,25 @@
   ],
   "budgets": [
     {
+      "id": 1,
       "category": "Entertainment",
       "maximum": 50.0,
       "theme": "#277C78"
     },
     {
+      "id": 2,
       "category": "Bills",
       "maximum": 750.0,
       "theme": "#82C9D7"
     },
     {
+      "id": 3,
       "category": "Dining Out",
       "maximum": 75.0,
       "theme": "#F2CDAC"
     },
     {
+      "id": 4,
       "category": "Personal Care",
       "maximum": 100.0,
       "theme": "#626070"
@@ -422,30 +426,35 @@
   ],
   "pots": [
     {
+      "id": 1,
       "name": "Savings",
       "target": 2000.0,
       "total": 159.0,
       "theme": "#277C78"
     },
     {
+      "id": 2,
       "name": "Concert Ticket",
       "target": 150.0,
       "total": 110.0,
       "theme": "#626070"
     },
     {
+      "id": 3,
       "name": "Gift",
       "target": 150.0,
       "total": 110.0,
       "theme": "#82C9D7"
     },
     {
+      "id": 4,
       "name": "New Laptop",
       "target": 1000.0,
       "total": 10.0,
       "theme": "#F2CDAC"
     },
     {
+      "id": 5,
       "name": "Holiday",
       "target": 1440.0,
       "total": 531.0,
@@ -454,20 +463,12 @@
   ],
   "color": [
     {
-      "name":"Beige-500",
-      "value":"#98908b"
-    },
-    {
       "name":"Grey-900",
       "value":"#201f24"
     },
     {
       "name":"Grey-500",
       "value":"#696868"
-    },
-    {
-      "name":"Grey-300",
-      "value":"#b3b3b3"
     },
     {
       "name":"Green",

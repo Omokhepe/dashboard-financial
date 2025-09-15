@@ -74,7 +74,7 @@ const Pots = () => {
             subTitle="Pot Name"
             amtText="Maximum Spend"
             spanText="Create a pot to set savings target."
-            colors={colorData}
+            colors={resultColor}
             formData={formData}
             setFormData={setFormData}
           />

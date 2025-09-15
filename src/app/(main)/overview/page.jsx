@@ -13,6 +13,7 @@ const Overview = () => {
   const router = useRouter();
   const { loading, error, data } = useFetchData('/data.json');
   const budgets = useSelector((state) => state.budget.budgets);
+  const pots = useSelector((state) => state.pots.pots);
 
   const [isActive, setIsActive] = useState('current');
 
@@ -20,7 +21,7 @@ const Overview = () => {
   if (error) return <p>Error: {error}</p>;
   if (!data) return <p>No data found</p>;
 
-  const { balance, transactions, pots } = data;
+  const { balance, transactions } = data;
 
   const balanceCards = [
     { id: 'current', label: 'Current Balance', value: balance?.current },
@@ -78,7 +79,7 @@ const Overview = () => {
               </div>
 
               <div className="flex flex-wrap flex-1 pl-3">
-                {pots.slice(0, 4).map((item, i) => {
+                {pots.map((item, i) => {
                   return (
                     <div
                       key={i}

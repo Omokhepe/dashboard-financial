@@ -22,7 +22,6 @@ const Budget = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
 
-  console.log(budgetData, editBudget, 'tryng again');
   const [open, setOpen] = useState(false); //modal state
   const [formData, setFormData] = useState({
     amount: '',

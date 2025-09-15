@@ -22,6 +22,11 @@ const Pots = () => {
   const [openDialog, setOpenDialog] = useState();
   const [selectedBudget, setSelectedBudget] = useState(null);
 
+  const resultColor = colorData.map((color) => ({
+    ...color,
+    isExist: potData.some((b) => b.theme.toLowerCase() === color.value),
+  }));
+
   const handleSubmit = () => {
     const nextId = potData.length > 0 ? potData[potData.length - 1].id + 1 : 1;
 
@@ -154,7 +159,7 @@ const Pots = () => {
             setOpenDialog(false);
           }}
           title="Pot"
-          color={colorData}
+          color={resultColor}
           subTitle="Pot Name"
           inputText={true}
           amtText="Target"

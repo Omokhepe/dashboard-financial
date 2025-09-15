@@ -92,7 +92,7 @@ export function EditModal({
                 onChange={(e) =>
                   setFormValues({
                     ...formValues,
-                    name: parseFloat(e.target.value),
+                    name: e.target.value,
                   })
                 }
                 id="amount-input"

@@ -11,7 +11,13 @@ import DialogForm from '@components/Modal';
 import { PopoverMenu } from '@components/PopoverMenu';
 import { EditModal } from '@components/EditModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBudget, updateBudget } from '@/store/action/budgetAction';
+import {
+  addBudget,
+  deleteBudget,
+  updateBudget,
+} from '@/store/action/budgetAction';
+import DeleteDialog from '@components/DeleteModal';
+import { deletePot } from '@/store/action/potAction';
 
 const Budget = () => {
   const { loading, error, data } = useFetchData('/data.json');
@@ -21,6 +27,7 @@ const Budget = () => {
   const color = data?.color || [];
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   const [open, setOpen] = useState(false); //modal state
   const [formData, setFormData] = useState({
@@ -67,6 +74,13 @@ const Budget = () => {
         maximum: parseFloat(values.amount),
         theme: values.color,
         id: values.id,
+      })
+    );
+  };
+  const handleDelete = (id) => {
+    dispatch(
+      deleteBudget({
+        id: id,
       })
     );
   };
@@ -140,7 +154,7 @@ const Budget = () => {
       <div className="flex">
         <div className="flex-1/3 bg-white m-5 rounded-lg card_wrap h-1/2">
           <div className="flex justify-center">
-            <OverviewBudget budgets={budgetData} transactions={transactions} />
+            <OverviewBudget budgets={budgetData} />
           </div>
           <div className="p-7">
             <h4 className="font-bold text-xl ">Spending Summary</h4>
@@ -193,7 +207,10 @@ const Budget = () => {
                         setSelectedBudget(b);
                         setOpenDialog(true);
                       }}
-                      onDelete={() => alert('Delete clicked')}
+                      onDelete={() => {
+                        setSelectedBudget(b);
+                        setOpenDelete(true);
+                      }}
                     />
                   </div>
                   <h5 className="text-sm text-gray-600">
@@ -253,7 +270,6 @@ const Budget = () => {
                   : { color: '', category: '', amount: '', id: '' }
               }
               onSave={(values) => {
-                console.log('Updated values:', values);
                 handleUpdate(values);
                 setOpenDialog(false);
               }}
@@ -262,6 +278,22 @@ const Budget = () => {
               color={resultColor}
               subTitle="Budget Category"
               amtText="Maximum Spend"
+            />
+            <DeleteDialog
+              openDelete={openDelete}
+              setOpenDelete={setOpenDelete}
+              onClose={() => setOpenDelete(false)}
+              initialValues={
+                selectedBudget
+                  ? {
+                      name: selectedBudget.category,
+                      id: selectedBudget.id,
+                    }
+                  : { name: '', id: '' }
+              }
+              onConfirm={(value) => {
+                handleDelete(value);
+              }}
             />
           </div>
         </div>

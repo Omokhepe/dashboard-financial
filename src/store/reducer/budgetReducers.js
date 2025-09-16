@@ -21,7 +21,7 @@ export default function budgetReducer(state = initialState, action) {
     case DELETE_BUDGET:
       return {
         ...state,
-        budgets: state.budgets.filter((b) => b.id !== action.payload),
+        budgets: state.budgets.filter((b) => b.id !== action.payload.id),
       };
 
     default:

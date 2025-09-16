@@ -8,7 +8,8 @@ import DialogForm from '@components/Modal';
 import { PopoverMenu } from '@components/PopoverMenu';
 import { EditModal } from '@components/EditModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPots, updatePots } from '@/store/action/potAction';
+import { addPots, deletePot, updatePots } from '@/store/action/potAction';
+import DeleteDialog from '@components/DeleteModal';
 
 const Pots = () => {
   const { loading, error, data } = useFetchData('/data.json');
@@ -20,6 +21,7 @@ const Pots = () => {
   const [formData, setFormData] = useState({ name: '', amount: '', theme: '' });
 
   const [openDialog, setOpenDialog] = useState();
+  const [openDelete, setOpenDelete] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
 
   const resultColor = colorData.map((color) => ({
@@ -48,6 +50,13 @@ const Pots = () => {
         target: parseFloat(values.amount),
         theme: values.color,
         id: values.id,
+      })
+    );
+  };
+  const handleDelete = (id) => {
+    dispatch(
+      deletePot({
+        id: id,
       })
     );
   };
@@ -104,7 +113,10 @@ const Pots = () => {
                     setSelectedBudget(item);
                     setOpenDialog(true);
                   }}
-                  onDelete={() => alert('Delete clicked')}
+                  onDelete={() => {
+                    setSelectedBudget(item);
+                    setOpenDelete(true);
+                  }}
                 />
               </div>
               <div className="flex justify-between py-8">
@@ -151,10 +163,9 @@ const Pots = () => {
                   amount: selectedBudget.target.toFixed(2),
                   id: selectedBudget.id,
                 }
-              : { color: '', category: '', amount: '', id: '' }
+              : { color: '', name: '', amount: '', id: '' }
           }
           onSave={(values) => {
-            console.log('Updated values:', values);
             handleUpdate(values);
             setOpenDialog(false);
           }}
@@ -164,6 +175,22 @@ const Pots = () => {
           inputText={true}
           amtText="Target"
           subtitle="Pot Name"
+        />
+        <DeleteDialog
+          openDelete={openDelete}
+          setOpenDelete={setOpenDelete}
+          onClose={() => setOpenDelete(false)}
+          initialValues={
+            selectedBudget
+              ? {
+                  name: selectedBudget.name,
+                  id: selectedBudget.id,
+                }
+              : { name: '', id: '' }
+          }
+          onConfirm={(value) => {
+            handleDelete(value);
+          }}
         />
       </div>
     </div>

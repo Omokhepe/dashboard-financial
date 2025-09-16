@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Cell, Label, Pie, PieChart } from 'recharts';
 import { Card, CardContent } from '@components/ui/card';
 import {
@@ -9,8 +9,10 @@ import {
 } from '@components/ui/chart';
 import { generateChartConfig } from '@/utils/formatData';
 
-const OverviewBudget = ({ budgets, transactions }) => {
-  const total = budgets.reduce((sum, item) => sum + item.maximum, 0);
+const OverviewBudget = ({ budgets }) => {
+  const total = useMemo(() => {
+    return budgets.reduce((sum, item) => sum + item.maximum, 0);
+  }, [budgets]);
 
   const [chartConfig, setChartConfig] = useState({});
 

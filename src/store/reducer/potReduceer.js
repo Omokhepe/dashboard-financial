@@ -21,7 +21,7 @@ export default function potReducer(state = initialState, action) {
     case DELETE_POTS:
       return {
         ...state,
-        pots: state.pots.filter((b) => b.id !== action.payload),
+        pots: state.pots.filter((b) => b.id !== action.payload.id),
       };
 
     default:

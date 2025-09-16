@@ -1,7 +1,14 @@
 'use client';
 import React, { useMemo, useState } from 'react';
 import { Button } from '@components/ui/button';
-import { Plus } from 'lucide-react';
+import {
+  ArrowDownLeftSquare,
+  Plus,
+  SquareArrowDown,
+  SquareChevronDown,
+  SquareChevronUp,
+  ChevronsUpDown,
+} from 'lucide-react';
 import { useFetchData } from '@hooks/useFetchData';
 import OverviewBudget from '@/app/(main)/overview/OverviewBudget';
 import { Progress } from '@components/ui/progress';
@@ -17,7 +24,12 @@ import {
   updateBudget,
 } from '@/store/action/budgetAction';
 import DeleteDialog from '@components/DeleteModal';
-import { deletePot } from '@/store/action/potAction';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const Budget = () => {
   const { loading, error, data } = useFetchData('/data.json');
@@ -28,6 +40,14 @@ const Budget = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
+  const [collapse, setCollapse] = useState(true);
+  const [openIndex, setOpenIndex] = useState(null);
+  //
+  const toggle = (index) => {
+    console.log(index);
+    setOpenIndex(openIndex === index ? null : index);
+    setCollapse(false);
+  };
 
   const [open, setOpen] = useState(false); //modal state
   const [formData, setFormData] = useState({
@@ -151,8 +171,9 @@ const Budget = () => {
           />
         </div>
       </div>
-      <div className="flex">
-        <div className="flex-1/3 bg-white m-5 rounded-lg card_wrap h-1/2">
+
+      <div className="flex h-screen">
+        <div className="flex-1/3 bg-white m-5 rounded-lg card_wrap min-h-1/12">
           <div className="flex justify-center">
             <OverviewBudget budgets={budgetData} />
           </div>
@@ -178,7 +199,7 @@ const Budget = () => {
           </div>
         </div>
 
-        <div className="flex-3/5 my-5">
+        <div className="flex-3/5 my-5 pb-4 overflow-y-auto">
           <div className="grid gap-6 ">
             {budgetData.map((b, index) => {
               const used = augustSums.sums[b.category] || 0;
@@ -187,73 +208,82 @@ const Budget = () => {
               const arrayTrans = augustSums.lists[b.category];
 
               return (
-                <div
+                <Accordion
+                  type="single"
+                  collapsible
+                  // className="w-full"
+                  defaultValue={index}
                   key={index}
-                  className="p-4 rounded-xl shadow-md border bg-white space-y-2"
+                  className=" w-full p-4 rounded-xl shadow-md border bg-white space-y-2"
                 >
-                  <div className="flex justify-between pt-5">
-                    <div>
-                      <span
-                        className="h-3 w-3 rounded-full mr-2 inline-block"
-                        style={{ backgroundColor: b.theme }}
-                      />
-                      <span className="font-medium" style={{ color: b.theme }}>
-                        {b.category}
-                      </span>
-                    </div>
-
-                    <PopoverMenu
-                      onEdit={() => {
-                        setSelectedBudget(b);
-                        setOpenDialog(true);
-                      }}
-                      onDelete={() => {
-                        setSelectedBudget(b);
-                        setOpenDelete(true);
-                      }}
-                    />
-                  </div>
-                  <h5 className="text-sm text-gray-600">
-                    Maximum of ${b.maximum}
-                  </h5>
-                  <Progress
-                    value={percent}
-                    className="h-6 bg-beige500"
-                    style={{ backgroundColor: b.theme }}
-                  />
-
-                  <div className="flex justify-evenly items-center">
-                    <span style={{ color: b.theme }}>${used.toFixed(2)}</span>
-                    <span>${difference.toFixed(2)}</span>
-                  </div>
-
-                  <div className="bg-beige100 rounded-lg border space-y-2">
-                    {arrayTrans.slice(0, 3).map((item, index) => {
-                      const { avatar, name, date, amount } = item;
-                      return (
-                        <div
-                          key={index}
-                          className="flex justify-between mb-3 p-3 border-b border-gray-200"
+                  <AccordionItem value="item-1">
+                    <div className="flex justify-between pt-5">
+                      <div>
+                        <span
+                          className="h-3 w-3 rounded-full mr-2 inline-block"
+                          style={{ backgroundColor: b.theme }}
+                        />
+                        <span
+                          className="font-medium"
+                          style={{ color: b.theme }}
                         >
-                          <span className="flex flex-row items-center gap-4 font-bold">
-                            <Image
-                              src={avatar}
-                              alt="avatar"
-                              width={40}
-                              height={40}
-                              className="rounded-2xl"
-                            />
-                            {name}
-                          </span>
-                          <div className="justify-end">
-                            <h4>${amount}</h4>
-                            <h6 className="text-sm">{formatDate(date)}</h6>
+                          {b.category}
+                        </span>
+                      </div>
+
+                      <PopoverMenu
+                        onEdit={() => {
+                          setSelectedBudget(b);
+                          setOpenDialog(true);
+                        }}
+                        onDelete={() => {
+                          setSelectedBudget(b);
+                          setOpenDelete(true);
+                        }}
+                      />
+                    </div>
+                    <h5 className="text-sm text-gray-600">
+                      Maximum of ${b.maximum}
+                    </h5>
+                    <Progress
+                      value={percent}
+                      className="h-6 bg-beige500"
+                      style={{ backgroundColor: b.theme }}
+                    />
+
+                    <div className="flex justify-evenly items-center">
+                      <span style={{ color: b.theme }}>${used.toFixed(2)}</span>
+                      <span>${difference.toFixed(2)}</span>
+                    </div>
+                    <AccordionContent className="bg-beige100 rounded-lg border space-y-2">
+                      {arrayTrans.slice(0, 3).map((item, index) => {
+                        const { avatar, name, date, amount } = item;
+                        return (
+                          <div
+                            key={index}
+                            className="flex justify-between mb-3 p-3 border-b border-gray-200"
+                          >
+                            <span className="flex flex-row items-center gap-4 font-bold">
+                              <Image
+                                src={avatar}
+                                alt="avatar"
+                                width={40}
+                                height={40}
+                                className="rounded-2xl"
+                              />
+                              {name}
+                            </span>
+                            <div className="justify-end">
+                              <h4>${amount}</h4>
+                              <h6 className="text-sm">{formatDate(date)}</h6>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                        );
+                      })}
+                    </AccordionContent>
+                    <AccordionTrigger className="flex justify-center"></AccordionTrigger>
+                  </AccordionItem>
+                </Accordion>
               );
             })}
             <EditModal

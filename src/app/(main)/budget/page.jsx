@@ -1,14 +1,7 @@
 'use client';
 import React, { useMemo, useState } from 'react';
 import { Button } from '@components/ui/button';
-import {
-  ArrowDownLeftSquare,
-  Plus,
-  SquareArrowDown,
-  SquareChevronDown,
-  SquareChevronUp,
-  ChevronsUpDown,
-} from 'lucide-react';
+import { Plus, CircleChevronRightIcon } from 'lucide-react';
 import { useFetchData } from '@hooks/useFetchData';
 import OverviewBudget from '@/app/(main)/overview/OverviewBudget';
 import { Progress } from '@components/ui/progress';
@@ -260,8 +253,10 @@ const Budget = () => {
                           onClick={() => {
                             handleSeeMore(b);
                           }}
+                          className="flex gap-4 items-center cursor-pointer hover:text-beige500 transition-all duration-200 ease-in-out"
                         >
                           See All
+                          <CircleChevronRightIcon />
                         </span>
                       </div>
                       {arrayTrans.slice(0, 3).map((item, index) => {

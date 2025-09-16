@@ -53,7 +53,7 @@ export function LoginForm({ className, ...props }) {
           <Input id="password" type="password" required />
         </div>
         <Button type="submit" className="w-full">
-          {loading && <Loader />} Login
+          {loading && <Loader className="mr-3 size-5 animate-spin" />} Login
         </Button>
       </div>
       <div className="text-center text-sm">

@@ -55,7 +55,8 @@ export function SignUp({ className, ...props }) {
           <Input id="password" type="password" required />
         </div>
         <Button type="submit" className="w-full font-bold">
-          {loading && <Loader />} Create Account
+          {loading && <Loader className="mr-3 size-5 animate-spin" />} Create
+          Account
         </Button>
       </div>
       <div className="text-center text-sm">

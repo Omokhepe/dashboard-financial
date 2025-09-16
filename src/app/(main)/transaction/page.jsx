@@ -26,6 +26,7 @@ import {
 } from '@components/ui/select';
 import { useFetchData } from '@hooks/useFetchData';
 import { ArrowBigLeft, ArrowBigRight } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 // 1. Define columns for transaction table
 const columns = [
@@ -84,7 +85,11 @@ const columns = [
 
 const Transaction = () => {
   const [globalFilter, setGlobalFilter] = useState('');
-  const [categoryFilter, setCategoryFilter] = React.useState('all');
+  const searchParams = useSearchParams();
+  const filterCategory = searchParams.get('category');
+  const [categoryFilter, setCategoryFilter] = React.useState(
+    filterCategory || 'all'
+  );
   const [sortBy, setSortBy] = React.useState('latest');
   const { loading, error, data } = useFetchData('/data.json');
 
@@ -133,7 +138,7 @@ const Transaction = () => {
   const categories = Array.from(new Set(transactions.map((t) => t.category)));
 
   return (
-    <div className="w-full bg-beige100 px-12 py-8">
+    <div className="w-full bg-beige100 h-full px-12 py-8">
       <h2 className="text-grey900 text-3xl font-bold pb-8">Transactions</h2>
       {/*Filters*/}
       <div className="bg-white p-6 rounded-lg">
@@ -164,7 +169,10 @@ const Transaction = () => {
 
             {/*Category Filter*/}
             <label htmlFor="categoryFilter">Category</label>
-            <Select onValueChange={setCategoryFilter} defaultValue="all">
+            <Select
+              onValueChange={setCategoryFilter}
+              defaultValue={categoryFilter}
+            >
               <SelectTrigger className="w-40" id="categoryFilter">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>

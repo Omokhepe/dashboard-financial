@@ -89,109 +89,113 @@ const Pots = () => {
           />
         </div>
       </div>
-      <div className="flex flex-wrap h-1/2">
-        {potData.map((item, index) => {
-          const { name, target, total, theme } = item;
-          const percent = Math.min((total / target) * 100, 100);
-          return (
-            <div
-              key={index}
-              className="flex flex-wrap flex-col card_wrap w-4/9 h-1/2 mx-5 p-5"
-            >
-              <div className="flex justify-between pt-5">
-                <div>
-                  {' '}
-                  <span
-                    className="h-3 w-3 rounded-full mr-3 inline-block"
-                    style={{ backgroundColor: theme }}
+      <div className="overflow-y-auto ">
+        <div className="flex flex-wrap h-1/2 ">
+          {potData.map((item, index) => {
+            const { name, target, total, theme } = item;
+            const percent = Math.min((total / target) * 100, 100);
+            return (
+              <div
+                key={index}
+                className="flex flex-wrap flex-col card_wrap w-4/9 h-1/2 mx-5 p-5"
+              >
+                <div className="flex justify-between pt-5">
+                  <div>
+                    {' '}
+                    <span
+                      className="h-3 w-3 rounded-full mr-3 inline-block"
+                      style={{ backgroundColor: theme }}
+                    />
+                    <span className="font-bold text-lg">{name}</span>
+                  </div>
+
+                  <PopoverMenu
+                    onEdit={() => {
+                      setSelectedBudget(item);
+                      setOpenDialog(true);
+                    }}
+                    onDelete={() => {
+                      setSelectedBudget(item);
+                      setOpenDelete(true);
+                    }}
                   />
-                  <span className="font-bold text-lg">{name}</span>
+                </div>
+                <div className="flex justify-between py-8">
+                  <span className="text-sm">Total Saved</span>
+                  <span className="text-3xl font-bold">
+                    ${total.toFixed(2)}
+                  </span>
+                </div>
+                <Progress
+                  value={percent}
+                  className="h-2 bg-beige500"
+                  style={{ backgroundColor: theme }}
+                />
+                <div className="flex justify-between p-4">
+                  <span className="font-bold">{percent}%</span>
+                  <span>Target of ${target.toLocaleString()}</span>
                 </div>
 
-                <PopoverMenu
-                  onEdit={() => {
-                    setSelectedBudget(item);
-                    setOpenDialog(true);
-                  }}
-                  onDelete={() => {
-                    setSelectedBudget(item);
-                    setOpenDelete(true);
-                  }}
-                />
+                <div className="flex justify-center m-5">
+                  <Button
+                    variant="secondary"
+                    className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
+                  >
+                    <Plus />
+                    Add Money
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
+                  >
+                    <Minus />
+                    Withdraw
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-between py-8">
-                <span className="text-sm">Total Saved</span>
-                <span className="text-3xl font-bold">${total.toFixed(2)}</span>
-              </div>
-              <Progress
-                value={percent}
-                className="h-2 bg-beige500"
-                style={{ backgroundColor: theme }}
-              />
-              <div className="flex justify-between p-4">
-                <span className="font-bold">{percent}%</span>
-                <span>Target of ${target.toLocaleString()}</span>
-              </div>
-
-              <div className="flex justify-center m-5">
-                <Button
-                  variant="secondary"
-                  className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
-                >
-                  <Plus />
-                  Add Money
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
-                >
-                  <Minus />
-                  Withdraw
-                </Button>
-              </div>
-            </div>
-          );
-        })}
-        <EditModal
-          open={openDialog}
-          onClose={() => setOpenDialog(false)}
-          initialValues={
-            selectedBudget
-              ? {
-                  color: selectedBudget.theme,
-                  name: selectedBudget.name,
-                  amount: selectedBudget.target.toFixed(2),
-                  id: selectedBudget.id,
-                }
-              : { color: '', name: '', amount: '', id: '' }
-          }
-          onSave={(values) => {
-            handleUpdate(values);
-            setOpenDialog(false);
-          }}
-          title="Pot"
-          color={resultColor}
-          subTitle="Pot Name"
-          inputText={true}
-          amtText="Target"
-          subtitle="Pot Name"
-        />
-        <DeleteDialog
-          openDelete={openDelete}
-          setOpenDelete={setOpenDelete}
-          onClose={() => setOpenDelete(false)}
-          initialValues={
-            selectedBudget
-              ? {
-                  name: selectedBudget.name,
-                  id: selectedBudget.id,
-                }
-              : { name: '', id: '' }
-          }
-          onConfirm={(value) => {
-            handleDelete(value);
-          }}
-        />
+            );
+          })}
+          <EditModal
+            open={openDialog}
+            onClose={() => setOpenDialog(false)}
+            initialValues={
+              selectedBudget
+                ? {
+                    color: selectedBudget.theme,
+                    name: selectedBudget.name,
+                    amount: selectedBudget.target.toFixed(2),
+                    id: selectedBudget.id,
+                  }
+                : { color: '', name: '', amount: '', id: '' }
+            }
+            onSave={(values) => {
+              handleUpdate(values);
+              setOpenDialog(false);
+            }}
+            title="Pot"
+            color={resultColor}
+            subTitle="Pot Name"
+            inputText={true}
+            amtText="Target"
+            subtitle="Pot Name"
+          />
+          <DeleteDialog
+            openDelete={openDelete}
+            setOpenDelete={setOpenDelete}
+            onClose={() => setOpenDelete(false)}
+            initialValues={
+              selectedBudget
+                ? {
+                    name: selectedBudget.name,
+                    id: selectedBudget.id,
+                  }
+                : { name: '', id: '' }
+            }
+            onConfirm={(value) => {
+              handleDelete(value);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

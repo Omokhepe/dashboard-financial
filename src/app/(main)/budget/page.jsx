@@ -30,8 +30,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { useRouter } from 'next/navigation';
 
 const Budget = () => {
+  const router = useRouter();
   const { loading, error, data } = useFetchData('/data.json');
   const budgetData = useSelector((state) => state.budget.budgets);
   const dispatch = useDispatch();
@@ -40,14 +42,6 @@ const Budget = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
-  const [collapse, setCollapse] = useState(true);
-  const [openIndex, setOpenIndex] = useState(null);
-  //
-  const toggle = (index) => {
-    console.log(index);
-    setOpenIndex(openIndex === index ? null : index);
-    setCollapse(false);
-  };
 
   const [open, setOpen] = useState(false); //modal state
   const [formData, setFormData] = useState({
@@ -139,6 +133,10 @@ const Budget = () => {
       { sums: {}, lists: {} }
     );
   }, [transactions, budgetData]);
+
+  const handleSeeMore = (value) => {
+    router.push(`/transaction?category=${encodeURIComponent(value.category)}`);
+  };
 
   return (
     <div className="w-full bg-beige100 px-12 py-8">
@@ -256,6 +254,16 @@ const Budget = () => {
                       <span>${difference.toFixed(2)}</span>
                     </div>
                     <AccordionContent className="bg-beige100 rounded-lg border space-y-2">
+                      <div className="flex justify-between p-4">
+                        <span>Latest Spending</span>
+                        <span
+                          onClick={() => {
+                            handleSeeMore(b);
+                          }}
+                        >
+                          See All
+                        </span>
+                      </div>
                       {arrayTrans.slice(0, 3).map((item, index) => {
                         const { avatar, name, date, amount } = item;
                         return (
@@ -274,7 +282,7 @@ const Budget = () => {
                               {name}
                             </span>
                             <div className="justify-end">
-                              <h4>${amount}</h4>
+                              <h4>${amount.toFixed(2)}</h4>
                               <h6 className="text-sm">{formatDate(date)}</h6>
                             </div>
                           </div>

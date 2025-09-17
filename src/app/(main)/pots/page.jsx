@@ -141,7 +141,7 @@ const Pots = () => {
                   style={{ backgroundColor: theme }}
                 />
                 <div className="flex justify-between p-4">
-                  <span className="font-bold">{percent}%</span>
+                  <span className="font-bold">{percent.toFixed(2)}%</span>
                   <span>Target of ${target.toLocaleString()}</span>
                 </div>
 

@@ -96,7 +96,7 @@ const TrackMoney = ({
 
         <div className="flex justify-between text-xs">
           <span style={{ color: formData.theme }}>
-            {percent + progressPercent}%
+            {(percent + progressPercent).toFixed(2)}%
           </span>
           <span>Target of ${formData.amount}</span>
         </div>

@@ -47,6 +47,10 @@ export default function DialogForm({
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
+            if (!formData.theme) {
+              alert('Please select a Theme color before continuing.');
+              return;
+            }
             onSave(formData);
             setOpen(false);
           }}

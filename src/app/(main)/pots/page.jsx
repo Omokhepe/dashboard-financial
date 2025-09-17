@@ -10,6 +10,7 @@ import { EditModal } from '@components/EditModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPots, deletePot, updatePots } from '@/store/action/potAction';
 import DeleteDialog from '@components/DeleteModal';
+import TrackMoney from '@components/TrackMoney';
 
 const Pots = () => {
   const { loading, error, data } = useFetchData('/data.json');
@@ -21,8 +22,10 @@ const Pots = () => {
   const [formData, setFormData] = useState({ name: '', amount: '', theme: '' });
 
   const [openDialog, setOpenDialog] = useState();
+  const [trackMoney, setTrackMoney] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedBudget, setSelectedBudget] = useState(null);
+  const [progressPercent, setProgressPercent] = useState(0);
 
   const resultColor = colorData.map((color) => ({
     ...color,
@@ -44,11 +47,17 @@ const Pots = () => {
     // API call or state update goes here
   };
   const handleUpdate = (values) => {
+    let total = 0;
+    if (values.inputAmount) {
+      total = Number(values.inputAmount) + Number(values.total);
+    }
+
     dispatch(
       updatePots({
         name: values.name,
         target: parseFloat(values.amount),
         theme: values.color,
+        total: total || values.total,
         id: values.id,
       })
     );
@@ -140,6 +149,11 @@ const Pots = () => {
                   <Button
                     variant="secondary"
                     className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
+                    onClick={() => {
+                      setSelectedBudget(item);
+                      setProgressPercent(percent);
+                      setTrackMoney(true);
+                    }}
                   >
                     <Plus />
                     Add Money
@@ -147,6 +161,11 @@ const Pots = () => {
                   <Button
                     variant="secondary"
                     className="bg-navy-grey text-grey900 hover:bg-grey900 hover:text-beige100 w-50 h-12 mx-4"
+                    // onClick={() => {
+                    //   setSelectedBudget(item);
+                    //   setProgressPercent(percent);
+                    //   setTrackMoney(true);
+                    // }}
                   >
                     <Minus />
                     Withdraw
@@ -164,6 +183,7 @@ const Pots = () => {
                     color: selectedBudget.theme,
                     name: selectedBudget.name,
                     amount: selectedBudget.target.toFixed(2),
+                    total: selectedBudget.total,
                     id: selectedBudget.id,
                   }
                 : { color: '', name: '', amount: '', id: '' }
@@ -194,6 +214,30 @@ const Pots = () => {
             onConfirm={(value) => {
               handleDelete(value);
             }}
+          />
+          <TrackMoney
+            trackMoney={trackMoney}
+            setTrackMoney={setTrackMoney}
+            onClose={() => setTrackMoney(false)}
+            initialValues={
+              selectedBudget
+                ? {
+                    name: selectedBudget.name,
+                    id: selectedBudget.id,
+                    color: selectedBudget.theme,
+                    amount: selectedBudget.target.toFixed(2),
+                    total: selectedBudget.total.toFixed(2),
+                    // inputAmount: 0,
+                  }
+                : { name: '', id: '', amount: '' }
+            }
+            onConfirm={(values) => {
+              // console.log('value', values);
+              handleUpdate(values);
+              setOpenDialog(false);
+              // handleDelete(value);
+            }}
+            progressPercent={progressPercent}
           />
         </div>
       </div>

@@ -25,29 +25,34 @@ const TrackMoney = ({
     setFormData(initialValues);
   }, [initialValues]);
   useEffect(() => {
-    const newPercent = Math.min(
-      ((Number(inputAmount) + Number(formData.total)) /
-        Number(formData.amount)) *
-        100,
-      100
-    );
+    const newPercent =
+      Math.min(
+        ((Number(inputAmount) + Number(formData.total)) /
+          Number(formData.amount)) *
+          100,
+        100
+      ) - progressPercent;
 
     setPercent(newPercent);
-    console.log(newPercent, progressPercent, percent, 'please work');
+    // console.log(newPercent, progressPercent, percent, 'please work');
   }, [inputAmount, progressPercent, formData.amount, formData.total]);
 
   const newAmount = Number(inputAmount) + Number(formData.total);
 
   const handleSubmit = () => {
-    useEffect(() => {
-      setFormData({
-        ...formData,
-        total: newAmount,
-      });
-    });
+    onConfirm(formData);
+    // setFormData({ amount: '', category: '', theme: '' });
+    setInputAmount(0);
+    setTrackMoney(false);
+    // useEffect(() => {
+    //   setFormData({
+    //     ...formData,
+    //     total: newAmount,
+    //   });
+    // });
   };
 
-  console.log(percent, formData);
+  // console.log(percent, formData);
 
   return (
     <Dialog open={trackMoney} onOpenChange={setTrackMoney}>
@@ -90,7 +95,9 @@ const TrackMoney = ({
         </div>
 
         <div className="flex justify-between text-xs">
-          <span style={{ color: formData.theme }}>{percent}%</span>
+          <span style={{ color: formData.theme }}>
+            {percent + progressPercent}%
+          </span>
           <span>Target of ${formData.amount}</span>
         </div>
 
@@ -100,7 +107,10 @@ const TrackMoney = ({
           type="number"
           value={inputAmount}
           onChange={
-            (e) => setInputAmount(e.target.value)
+            (e) => {
+              setInputAmount(e.target.value);
+              setFormData({ ...formData, inputAmount: e.target.value });
+            }
 
             // amount: e.target.value,
           }

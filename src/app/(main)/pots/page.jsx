@@ -51,16 +51,16 @@ const Pots = () => {
     if (values.inputAmount) {
       total = Number(values.inputAmount) + Number(values.total);
     }
+    const params = {
+      name: values.name,
+      target: parseFloat(values.amount),
+      theme: values.color,
+      total: total || parseFloat(values.total),
+      id: values.id,
+    };
+    // console.log(params);
 
-    dispatch(
-      updatePots({
-        name: values.name,
-        target: parseFloat(values.amount),
-        theme: values.color,
-        total: total || values.total,
-        id: values.id,
-      })
-    );
+    dispatch(updatePots(params));
   };
   const handleDelete = (id) => {
     dispatch(
